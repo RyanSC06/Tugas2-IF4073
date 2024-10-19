@@ -1,0 +1,5 @@
+function [result] = gaussian_filter(I, n, sigma)
+    gaussian_mask = zeros(n, n);
+
+    for i -
+end
