@@ -9,5 +9,6 @@ function [result] = gaussian_filter(I, n, sigma)
         end
     end
 
+    gaussian_mask = gaussian_mask ./ sum(gaussian_mask, 'all');
     result = convolution(I, gaussian_mask);
 end

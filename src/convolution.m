@@ -32,11 +32,6 @@ function [result] = convolution(I, mask)
                         new_middlevalue = new_middlevalue + I_sample * mask(row, col);
                     end
                 end
-    
-                % Normalisasi hasil konvolusi terhadap jumlah nilai mask
-                if (mask_total > 1)
-                    new_middlevalue = floor(new_middlevalue / mask_total);
-                end
                 
                 % Clamp nilai konvolusi ke interval 0..255
                 new_middlevalue = min(max(new_middlevalue, 0), 255);

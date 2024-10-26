@@ -1,13 +1,13 @@
-function [I, result] = midpoint_filter(I, type, density, m, n)
+function [I_d, result] = midpoint_filter(I, type, density, m, n)
     if (type == "salt&pepper")
-        I = imnoise(I, 'salt & pepper', density);
+        I_d = imnoise(I, 'salt & pepper', density);
     elseif (type == "gaussian")
-        I = imnoise(I, 'gaussian', 0, density);
+        I_d = imnoise(I, 'gaussian', 0, density);
     else
         error("Noise type is not supported!");
     end
 
-    [M, N, C] = size(I);
+    [M, N, C] = size(I_d);
     X = m;
     Y = n;
 
@@ -21,7 +21,7 @@ function [I, result] = midpoint_filter(I, type, density, m, n)
                 
                 for u = i : (i + X-1)
                     for v = j : (j + Y-1)
-                        value_list(end + 1) = I(u, v, k);
+                        value_list(end + 1) = I_d(u, v, k);
                     end
                 end
                 
@@ -46,7 +46,7 @@ function [I, result] = midpoint_filter(I, type, density, m, n)
         for j = 1 : N
             for k = 1 : C
                 if (i <= floor(X/2) || j <= floor(Y/2) || i > M - floor(X/2) || j > N - floor(Y/2))
-                    result(i, j, k) = I(i, j, k);
+                    result(i, j, k) = I_d(i, j, k);
                 end
             end
         end

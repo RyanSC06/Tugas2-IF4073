@@ -46,7 +46,7 @@ function [S1, H, S2, result] = BNRF(f, R, n, U0, V0)
     % Penapis juga di-shift seperti citra padded
     H = fftshift(H);
 
-
+    result = zeros([M, N, C]);
     for k = 1 : C
         % STEP 3: Lakukan transformasi Fourier pada f
         % dengan padding sehingga ukuran menjadi P*Q

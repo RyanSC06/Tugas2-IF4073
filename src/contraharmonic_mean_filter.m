@@ -1,13 +1,13 @@
-function [I, result] = contraharmonic_mean_filter(I, type, density, m, n, Q)
+function [I_d, result] = contraharmonic_mean_filter(I, type, density, m, n, Q)
     if (type == "salt&pepper")
-        I = imnoise(I, 'salt & pepper', density);
+        I_d = imnoise(I, 'salt & pepper', density);
     elseif (type == "gaussian")
-        I = imnoise(I, 'gaussian', 0, density);
+        I_d = imnoise(I, 'gaussian', 0, density);
     else
         error("Noise type is not supported!");
     end
 
-    [M, N, C] = size(I);
+    [M, N, C] = size(I_d);
     X = m;
     Y = n;
 
@@ -22,8 +22,8 @@ function [I, result] = contraharmonic_mean_filter(I, type, density, m, n, Q)
                 
                 for u = i : (i + X-1)
                     for v = j : (j + Y-1)
-                        new_middlevalue_up = new_middlevalue_up + double(I(u, v, k))^(Q+1);
-                        new_middlevalue_down = new_middlevalue_down + double(I(u, v, k))^(Q);
+                        new_middlevalue_up = new_middlevalue_up + double(I_d(u, v, k))^(Q+1);
+                        new_middlevalue_down = new_middlevalue_down + double(I_d(u, v, k))^(Q);
                     end
                 end
                 
@@ -45,7 +45,7 @@ function [I, result] = contraharmonic_mean_filter(I, type, density, m, n, Q)
         for j = 1 : N
             for k = 1 : C
                 if (i <= floor(X/2) || j <= floor(Y/2) || i > M - floor(X/2) || j > N - floor(Y/2))
-                    result(i, j, k) = I(i, j, k);
+                    result(i, j, k) = I_d(i, j, k);
                 end
             end
         end

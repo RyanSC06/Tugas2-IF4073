@@ -1,14 +1,18 @@
-A = imread('test/7/32.jpg');
-PSF = fspecial('motion', 5, 45);
+% A = imread('test/1/0.jpg');
+% PSF = fspecial('motion', 5, 45);
+PSF = fspecial('gaussian', [9 9], 1);
 
-A_d = imfilter(A, PSF, 'conv', 'circular');
-figure('Name', 'Input image'); imshow(A);
+% A_d = imfilter(A, PSF, 'conv', 'circular');
+A_d = imread('test/7/34.jpg');
+% figure('Name', 'Input image'); imshow(A);
 figure('Name', 'Distorted image'); imshow(A_d);
 
-[Hw, C] = wiener_deconv(A_d, PSF, 0.01);
+NSR = 0;
+
+[Hw, C] = wiener_deconv(A_d, PSF, NSR);
 figure('Name', 'Restored image'); imshow(C);
 
-D = deconvwnr(A_d, PSF, 0.01);
+D = deconvwnr(A_d, PSF, NSR);
 figure('Name', 'Restored image with deconvwnr'); imshow(D);
 
 D_f = fft2(D);
