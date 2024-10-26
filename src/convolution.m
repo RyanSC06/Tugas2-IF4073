@@ -13,42 +13,35 @@ function [result] = convolution(I, mask)
     result = zeros(M, N, C);
     
     for k = 1 : C
-        for i = 1 : M - X + 1
-            for j = 1 : N - Y + 1
+        for i = 1 : M
+            for j = 1 : N
                 new_middlevalue = 0;
                 
-                row = 0;
-                for u = i : (i + X-1)
-                    row = row + 1;
-                    col = 0;
-                    for v = j : (j + Y-1)
-                        col = col + 1;
-                        new_middlevalue = new_middlevalue + (double(I(u, v, k)) * mask(row, col));
+                % Lakukan operasi konvolusi
+                for row = 1 : X
+                    for col = 1 : Y
+                        % Hitung koordinat citra I yang bersesuaian
+                        u = i + row - 1 - floor(X/2);
+                        v = j + col - 1 - floor(Y/2);
+
+                        % Ambil pixel citra I dengan pendekatan edge clamping
+                        u_sample = min(max(u, 1), M);
+                        v_sample = min(max(v, 1), N);
+                        I_sample = double(I(u_sample, v_sample, k));
+
+                        new_middlevalue = new_middlevalue + I_sample * mask(row, col);
                     end
                 end
     
+                % Normalisasi hasil konvolusi terhadap jumlah nilai mask
                 if (mask_total > 1)
                     new_middlevalue = floor(new_middlevalue / mask_total);
                 end
                 
-                if (new_middlevalue < 0)
-                    new_middlevalue = 0;
-                elseif (new_middlevalue > 255)
-                    new_middlevalue = 255;
-                end
+                % Clamp nilai konvolusi ke interval 0..255
+                new_middlevalue = min(max(new_middlevalue, 0), 255);
     
-                result((i + floor(X/2)), (j + floor(Y/2)), k) = new_middlevalue;
-            end
-        end
-    end
-
-    
-    for i = 1 : M
-        for j = 1 : N
-            for k = 1 : C
-                if (i <= floor(X/2) || j <= floor(Y/2) || i > M - floor(X/2) || j > N - floor(Y/2))
-                    result(i, j, k) = I(i, j, k);
-                end
+                result(i, j, k) = new_middlevalue;
             end
         end
     end
